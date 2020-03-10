@@ -1,0 +1,25 @@
+alDay 1！！
+#印象
+pytorch与python关系认识：类似c语言头文件？提供了一个包含诸多函数的库以供调用？
+
+#Tensors
+torch.empty(a,b) 创建一个a行b列的初始矩阵，在使用之前，其内部各元素值不确定
+torch.rand(a,b) 创建0-1随机矩阵
+torch.zeros(a,b，dtype=torch.long) 创建0矩阵,并指定元素格式为long
+x=torch.tensor([1.1,2.2,3]) 由数据直接创建tensor
+x=x.new_ones(a,b,torch.double) new_*方法创建1矩阵 (疑问：x.new_ones与y.new_ones均可，x. y. 的区别是什么)
+x1=torch.randn_like(x,dtype=torch.long) 基于现有矩阵大小创建01随机矩阵，zeros,ones亦可；数据类型与原有矩阵相同，除非特别指定
+x.size 返回元组torch.size([a,b])
+x+y;torch.add(x,y);torch.add(x,y,out=z) 指定输出到z；y.add_(x); 均可实现矩阵相加
+x[:,1]第二列所有行（类似matlab）,x[i,j]调取第i+1行，j+1列元素，！！！注意，与matlab 不同，第一个元素行列标号从0开始
+import numpy as np；a = np.ones(5)；b = torch.from_numpy(a) 将numpy array a 转换为torch tensor b ,此时a,b均指向同一数组，改变其一，均会改变
+
+#auto grad
+提供对张量所有运算的自动微分
+for torch.Tensor;set attribute .requires_grad as True;it starts to track all operations on it;
+When computation finished;can call .backward(); then all the gradients computed automatically and add in .grad attribute.
+x = torch.ones(2, 2, requires_grad=True); x.requires_grad_(True) #或False;将张量x的requires_gard属性设置为True,开启对x运算历史记录，注意T要大写
+out.backward();x.grad 假设out为x经一系列运算后的结果张量，x.grad返回d(out)/d(x)的值
+？？ v = torch.tensor([0.1, 1.0, 0.0001], dtype=torch.float)；y.backward(v)；print(x.grad)； backward需要指定一个向量？为啥，元素值如何确定？
+with torch.no_grad():  使用torch.no_grad()可停止对requires_grad标签为True的张量进行追踪（既在保持属性值为True的同时，将其作为False进行对待？）
+y = x.detach()  创建一个新的与x相同的tensor,但是requires_grad属性变为False
